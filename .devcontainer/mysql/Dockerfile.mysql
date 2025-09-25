@@ -29,7 +29,7 @@ RUN set -euxo pipefail \
        mysql-community-client-plugins-${RPM_VERSION} \ 
     && dnf -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm \ 
     && percona-release setup -y pxb80 \ 
-    && dnf -y install percona-xtrabackup-80 supervisor which procps-ng hostname findutils gzip tar openssl less openssh-server openssh-clients \ 
+    && dnf -y install percona-xtrabackup-80 supervisor which procps-ng hostname findutils gzip tar openssl less openssh-server openssh-clients sudo \ 
     && dnf clean all \ 
     && rm -rf /var/cache/dnf
 
@@ -39,6 +39,9 @@ RUN set -euxo pipefail \
     && touch /var/log/mysqld.log /var/log/mysql-slow.log \ 
     && chown -R mysql:mysql /data/mysql /var/log/mysqld.log /var/log/mysql-slow.log /var/run/mysqld \ 
     && chown -R dev:dev /home/dev \ 
+    && usermod -aG mysql dev \ 
+    && echo 'dev ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/dev \ 
+    && chmod 440 /etc/sudoers.d/dev \ 
     && chmod 750 /data/mysql \ 
     && chmod 775 /var/run/mysqld \ 
     && chmod 700 /home/dev \ 
