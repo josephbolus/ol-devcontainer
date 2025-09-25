@@ -6,6 +6,7 @@ MYSQL_DATADIR=${MYSQL_DATADIR:-/data/mysql}
 MYSQL_SOCKET=${MYSQL_SOCKET:-/data/mysql/mysql.sock}
 MYSQLX_SOCKET=${MYSQLX_SOCKET:-/data/mysql/mysqlx.sock}
 MYSQL_LOG_ERROR=${MYSQL_LOG_ERROR:-/var/log/mysqld.log}
+MYSQL_SLOW_LOG=${MYSQL_SLOW_LOG:-/var/log/mysql-slow.log}
 INIT_DIR="/docker-entrypoint-initdb.d"
 DEFAULTS_FILE=${MYSQL_DEFAULTS_FILE:-/etc/my.cnf}
 SSH_SOURCE_DIR=${SSH_SOURCE_DIR:-/opt/devcontainer/ssh}
@@ -17,6 +18,10 @@ ensure_dirs() {
   chmod 750 "${MYSQL_DATADIR}"
   touch "${MYSQL_LOG_ERROR}"
   chown mysql:mysql "${MYSQL_LOG_ERROR}"
+  if [ -n "${MYSQL_SLOW_LOG:-}" ]; then
+    touch "${MYSQL_SLOW_LOG}"
+    chown mysql:mysql "${MYSQL_SLOW_LOG}"
+  fi
 }
 
 setup_sshd() {

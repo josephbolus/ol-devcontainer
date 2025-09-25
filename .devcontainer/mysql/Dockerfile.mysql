@@ -36,8 +36,8 @@ RUN set -euxo pipefail \
 RUN set -euxo pipefail \ 
     && useradd --create-home --shell /bin/bash dev \ 
     && mkdir -p /data/mysql /docker-entrypoint-initdb.d /var/log /var/run/mysqld /var/run/sshd /opt/devcontainer/ssh \ 
-    && touch /var/log/mysqld.log \ 
-    && chown -R mysql:mysql /data/mysql /var/log/mysqld.log /var/run/mysqld \ 
+    && touch /var/log/mysqld.log /var/log/mysql-slow.log \ 
+    && chown -R mysql:mysql /data/mysql /var/log/mysqld.log /var/log/mysql-slow.log /var/run/mysqld \ 
     && chown -R dev:dev /home/dev \ 
     && chmod 750 /data/mysql \ 
     && chmod 775 /var/run/mysqld \ 
