@@ -9,8 +9,13 @@ CONFIG_DEST="${SSH_TARGET_DIR}/devcontainer-mysql-config"
 MAIN_CONFIG="${SSH_TARGET_DIR}/config"
 
 if [ ! -f "${SSH_SOURCE_DIR}/id_ed25519" ]; then
-  echo "No SSH private key found at ${SSH_SOURCE_DIR}/id_ed25519. Skipping client SSH setup." >&2
-  exit 0
+  install -d -m 700 "${SSH_SOURCE_DIR}"
+  ssh-keygen -t ed25519 -N "" -C "devcontainer-mysql" -f "${SSH_SOURCE_DIR}/id_ed25519"
+  chmod 600 "${SSH_SOURCE_DIR}/id_ed25519"
+fi
+
+if [ -f "${SSH_SOURCE_DIR}/id_ed25519.pub" ]; then
+  install -m 600 "${SSH_SOURCE_DIR}/id_ed25519.pub" "${SSH_SOURCE_DIR}/authorized_keys"
 fi
 
 install -d -m 700 "${SSH_TARGET_DIR}"

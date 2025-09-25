@@ -1,16 +1,18 @@
 # SSH assets for devcontainer MySQL hosts
 
-These files provide a ready-to-use ED25519 key pair so the workspace container can
-connect to `mysql-primary` and `mysql-replica` via SSH/SFTP/SSHFS.
+The SSH assets that live in this folder are **generated automatically** when the
+dev container comes up for the first time. They are intentionally `.gitignore`d
+so every clone can produce its own unique credentials.
 
-- `id_ed25519` is the private key copied into the app container during
-  `postCreateCommand` via `.devcontainer/scripts/setup-ssh-client.sh`.
-- `authorized_keys` is mounted into each MySQL container and copied into the
-  `dev` user's `~/.ssh/authorized_keys` on start.
-- `config` adds host aliases so running `ssh mysql-primary` or
-  `scp file mysql-replica:/tmp/` works without extra flags.
+- `id_ed25519` / `id_ed25519.pub` – created on-demand by
+  `.devcontainer/scripts/setup-ssh-client.sh`; the private key never leaves your
+  working copy, while the public key is copied into `authorized_keys`.
+- `authorized_keys` – mounted into each MySQL container and installed for the
+  `dev` user at boot so SSH/SFTP/SSHFS all work out of the box.
+- `config` – tracked in Git so aliases (`mysql-primary`, `mysql-replica`) work
+  consistently across workspaces.
 
-Replace these with your own keys if you prefer. After updating `authorized_keys`
-run `docker compose restart mysql-primary mysql-replica` to pick up the change,
-and re-run `.devcontainer/scripts/setup-ssh-client.sh` (or reload the
-Dev Container) so the app container copies the new private key/config.
+If you want to rotate the key pair, delete the generated files in this folder
+and run `.devcontainer/scripts/setup-ssh-client.sh` (or rebuild the dev
+container). The script will mint a fresh ED25519 key pair, sync `authorized_keys`,
+and update your SSH client configuration.
