@@ -4,5 +4,5 @@
 .devcontainer/ssh/authorized_keys
 
 # Untracked docs tarballs/reference dumps
-docs/
+docs/*
 cdx.sh
