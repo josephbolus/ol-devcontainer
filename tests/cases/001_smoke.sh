@@ -9,6 +9,11 @@ PRIMARY_NAME="mysql-primary"
 REPLICA_NAME="mysql-replica"
 
 cleanup() {
+  if [ "${cleanup_done}" -eq 1 ]; then
+    return
+  fi
+  cleanup_done=1
+  echo "Cleaning up containers..."
   cd "${ROOT_DIR}" || return
   if [ -x "${ROOT_DIR}/cleanup.sh" ]; then
     "${ROOT_DIR}/cleanup.sh" >/dev/null 2>&1 || true
@@ -16,6 +21,8 @@ cleanup() {
 }
 
 trap cleanup EXIT
+
+cleanup_done=0
 
 cd "${ROOT_DIR}"
 cleanup
@@ -85,3 +92,4 @@ docker exec "${DEV_CONTAINER_NAME}" bash /workspace/.devcontainer/mysql/verify-r
 grep -q "✅ Replication OK" /tmp/verify.log
 
 echo "Smoke test completed successfully."
+cleanup
