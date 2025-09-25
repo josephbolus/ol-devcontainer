@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ..:/workspace:cached
+    container_name: devcontainer-app
     command: sleep infinity
     networks:
       - mysql-network
