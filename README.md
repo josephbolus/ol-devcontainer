@@ -35,7 +35,7 @@ SSH sessions land in the `dev` account (NOPASSWD sudo, member of the `mysql` gro
 
 ```bash
 docker exec -it mysql-primary supervisorctl status
-supervisorctl restart mysqld
+sudo supervisorctl restart mysqld
 
 sudo ls /data/mysql
 sudo tail -f /var/log/mysqld.log
@@ -62,6 +62,11 @@ workspace SSH client configuration.
 - `.devcontainer/mysql/setup-db.sh` seeds the primary/replica and configures replication.
 - `.devcontainer/mysql/verify-replication.sh` validates status and data sync; it runs on every
   devcontainer start and should be executed manually before changes are committed.
+
+## Automated tests
+
+- Run `./tests/run-all.sh` from the host to execute the end-to-end smoke test. It rebuilds the
+  images, exercises the SSH/supervisor workflows, checks replication, and tears everything down.
 
 ```
 $ bash .devcontainer/mysql/setup-db.sh

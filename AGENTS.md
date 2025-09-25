@@ -14,10 +14,11 @@
 - `bash .devcontainer/mysql/setup-db.sh` reseeds the cluster; rerun after editing SQL or `.cnf`.
 - `bash .devcontainer/mysql/verify-replication.sh` confirms replication and sample-row sync prior to commit.
 - `.devcontainer/scripts/post-create.sh` re-seeds the cluster and refreshes SSH keys if the devcontainer needs to be re-run manually.
+- `./tests/run-all.sh` executes the full smoke suite (build, seed, SSH checks, replication, cleanup) and should stay green as features evolve.
 
 ## Container Access & Operations
 - SSH into the DB containers from the workspace with `ssh mysql-primary` / `ssh mysql-replica`; the `dev` user has passwordless sudo and `mysql` group membership.
-- Manage services with `docker exec -it mysql-primary supervisorctl status` (or `restart mysqld` / `restart sshd`).
+- Manage services with `docker exec -it mysql-primary supervisorctl status` when running from the host, or `sudo supervisorctl <cmd>` when connected over SSH as `dev`.
 - `cleanup.sh` removes containers, volumes, and dev networks; run it outside the devcontainer when you need a clean slate.
 
 ## Coding Style & Naming Conventions

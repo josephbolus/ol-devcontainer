@@ -43,6 +43,7 @@ safe_volume_remove() {
 echo "-> Stopping and removing containers..."
 safe_cleanup "${cdir}_devcontainer"
 safe_cleanup "${cdir}-devcontainer"  # Alternative naming
+safe_cleanup "devcontainer"
 safe_cleanup "mysql-replica"
 safe_cleanup "mysql-primary"
 
