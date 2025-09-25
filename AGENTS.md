@@ -6,12 +6,19 @@
 - `.devcontainer/conf/primary.cnf` and `replica.cnf` hold server overrides; document every change inline.
 - `.devcontainer/mysql/` contains init SQL plus automation scripts; keep new lifecycle scripts beside `setup-db.sh` and `verify-replication.sh`.
 - `docs/` stores upstream references that explain configuration decisions.
+- `cleanup.sh` lives at repo root and tears down containers/volumes from the host.
 
 ## Build, Test, and Development Commands
 - `docker compose -f .devcontainer/docker-compose.yml up -d` boots the app container with the primary/replica pair.
 - `docker compose -f .devcontainer/docker-compose.yml down -v` stops services and wipes state before config refactors.
 - `bash .devcontainer/mysql/setup-db.sh` reseeds the cluster; rerun after editing SQL or `.cnf`.
 - `bash .devcontainer/mysql/verify-replication.sh` confirms replication and sample-row sync prior to commit.
+- `.devcontainer/scripts/post-create.sh` re-seeds the cluster and refreshes SSH keys if the devcontainer needs to be re-run manually.
+
+## Container Access & Operations
+- SSH into the DB containers from the workspace with `ssh mysql-primary` / `ssh mysql-replica`; the `dev` user has passwordless sudo and `mysql` group membership.
+- Manage services with `docker exec -it mysql-primary supervisorctl status` (or `restart mysqld` / `restart sshd`).
+- `cleanup.sh` removes containers, volumes, and dev networks; run it outside the devcontainer when you need a clean slate.
 
 ## Coding Style & Naming Conventions
 - Use two-space indentation for JSON, YAML, and shell scripts; keep related blocks grouped.
