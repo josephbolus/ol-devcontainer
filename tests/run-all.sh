@@ -20,9 +20,9 @@ if [ ${#cases[@]} -eq 0 ]; then
 fi
 
 for case_script in $(printf '%s\n' "${cases[@]}" | sort); do
-  echo "\n==> Running $(basename "${case_script}")"
+  echo "--> Running $(basename "${case_script}")"
   bash "${case_script}"
-  echo "<== Completed $(basename "${case_script}")"
+  echo "<-- Completed $(basename "${case_script}")"
 done
 
-echo "\n✅ All tests passed"
+echo "✅ All tests passed!"
