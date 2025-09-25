@@ -1,0 +1,41 @@
+{
+  "name": "MySQL Primary-Replica Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql"
+      ],
+      "settings": {
+        "sqltools.connections": [
+          {
+            "name": "Primary",
+            "driver": "MySQL",
+            "server": "mysql-primary",
+            "port": 3306,
+            "username": "root",
+            "password": "rootpassword",
+            "database": "testdb"
+          },
+          {
+            "name": "Replica",
+            "driver": "MySQL",
+            "server": "mysql-replica",
+            "port": 3306,
+            "username": "root",
+            "password": "rootpassword",
+            "database": "testdb"
+          }
+        ]
+      }
+    }
+  },
+  "forwardPorts": [3306, 3307],
+  "postCreateCommand": "bash /workspace/.devcontainer/mysql/setup-db.sh",
+  "postStartCommand": "bash /workspace/.devcontainer/mysql/verify-replication.sh",
+  "remoteUser": "vscode"
+}

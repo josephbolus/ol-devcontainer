@@ -1,0 +1,111 @@
+[client-server]
+#!includedir /etc/my.cnf.d
+
+[mysqld]
+
+# GENERAL #
+server-id=1
+# bind-address=0.0.0.0
+binlog-ignore-db=mysql
+binlog-ignore-db=information_schema
+binlog-ignore-db=performance_schema
+binlog_format=MIXED
+
+# For DEV only
+user=root # DEV only
+default_authentication_plugin=mysql_native_password
+activate_all_roles_on_login=ON
+
+# Load semi-sync replication plugin
+#plugin-load-add = rpl_semi_sync_source=semisync_source.so
+#rpl_semi_sync_source_enabled = 1
+
+# MyISAM #
+key-buffer-size=64M
+sort_buffer_size=8M
+join_buffer_size=128M
+read_buffer_size=2M
+read_rnd_buffer_size=64M
+bulk_insert_buffer_size=64M
+
+# SAFETY #
+connect_timeout=10
+max-allowed-packet=1G
+max-connect-errors=1000000
+#skip-name-resolve
+sysdate-is-now=1
+low_priority_updates=1
+mysqlx=0
+
+# INNODB SETTINGS #
+# innodb=FORCE   # Removed - deprecated in MySQL 8.0
+innodb_flush_method=O_DIRECT
+innodb_buffer_pool_size=1G
+innodb_adaptive_hash_index=0
+innodb_rollback_on_timeout=ON
+innodb_buffer_pool_instances=8   # Reduced to 8 from 18
+innodb_redo_log_capacity=4G
+innodb_lock_wait_timeout=100
+binlog_expire_logs_seconds=604800
+sync_binlog=1
+
+# CACHES AND LIMITS #
+tmp-table-size=64M
+max-heap-table-size=64M
+max-connections=1000
+thread-cache-size=100
+open-files-limit=65535
+table-definition-cache=4096
+table-open-cache=4096
+
+# LOGGING AND PATHS #
+#datadir=/var/lib/mysql
+#socket=/var/lib/mysql/mysql.sock
+#log-error=/var/lib/mysql/mysqld.log
+log-bin=/var/lib/mysql/binlog
+slow-query-log=1
+slow-query-log-file=/tmp/mysql-slow.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+# MySQL8 Security Hardening
+#mysqlx_socket=/var/lib/mysql/mysqlx.sock
+log-raw=OFF
+skip-grant-tables=FALSE
+# secure-file-priv=/var/lib/mysql-files
+log-queries-not-using-indexes=1
+
+# plugin-load=audit_log.so
+# audit-log=FORCE_PLUS_PERMANENT
+# audit_log_file=/var/log/mysql/audit.log
+# audit_log_format=JSON
+# audit_log_rotate_on_size=1024M
+# audit_log_rotations=10
+
+# plugin-load-add=connection_control.so
+# connection-control=FORCE_PLUS_PERMANENT
+# connection-control-failed-login-attempts=FORCE_PLUS_PERMANENT
+# connection_control_failed_connections_threshold=5
+# connection_control_min_connection_delay=60000
+# connection_control_max_connection_delay=1920000
+
+# ssl_ca=/var/lib/mysql-files/ca.pem
+# ssl_cert=/var/lib/mysql-files/server-cert.pem
+# ssl_key=/var/lib/mysql-files/server-key.pem
+# require_secure_transport=ON
+
+local-infile=0
+sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
+character_set_server=utf8
+collation_server=utf8_general_ci
+init_connect='SET NAMES utf8'
+skip-character-set-client-handshake
+
+[mysql]
+
+# CLIENT #
+# host=0.0.0.0
+# port=3306
+#socket=/var/lib/mysql/mysql.sock
+
+# [mysqldump]
+#socket=/var/lib/mysql/mysql.sock
