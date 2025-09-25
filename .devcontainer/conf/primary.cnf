@@ -59,12 +59,13 @@ table-definition-cache=4096
 table-open-cache=4096
 
 # LOGGING AND PATHS #
-#datadir=/var/lib/mysql
-#socket=/var/lib/mysql/mysql.sock
-#log-error=/var/lib/mysql/mysqld.log
-log-bin=/var/lib/mysql/binlog
+datadir=/data/mysql
+socket=/data/mysql/mysql.sock
+mysqlx_socket=/data/mysql/mysqlx.sock
+log-error=/var/log/mysqld.log
+log-bin=/data/mysql/binlog
 slow-query-log=1
-slow-query-log-file=/tmp/mysql-slow.log
+slow-query-log-file=/var/log/mysql-slow.log
 pid-file=/var/run/mysqld/mysqld.pid
 
 # MySQL8 Security Hardening

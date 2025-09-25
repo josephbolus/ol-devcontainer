@@ -15,7 +15,12 @@ services:
       - mysql-replica
 
   mysql-primary:
-    image: mysql/mysql-server:8.0.32
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.mysql
+      args:
+        MYSQL_VERSION: ${MYSQL_VERSION}
+        MYSQL_PACKAGE_RELEASE: ${MYSQL_PACKAGE_RELEASE}
     container_name: mysql-primary
     restart: always
     environment:
@@ -26,7 +31,7 @@ services:
       MYSQL_DATABASE: testdb      
       MYSQL_SERVER_ID: 1  # Fallback
     volumes:
-      - mysql-primary-data:/var/lib/mysql
+      - mysql-primary-data:/data/mysql
       - ./conf/primary.cnf:/etc/my.cnf
       - ./mysql/init-scripts/primary-init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
@@ -35,7 +40,12 @@ services:
       - mysql-network
 
   mysql-replica:
-    image: mysql/mysql-server:8.0.32
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.mysql
+      args:
+        MYSQL_VERSION: ${MYSQL_VERSION}
+        MYSQL_PACKAGE_RELEASE: ${MYSQL_PACKAGE_RELEASE}
     container_name: mysql-replica
     restart: always
     environment:
@@ -46,7 +56,7 @@ services:
       MYSQL_DATABASE: testdb         
       MYSQL_SERVER_ID: 2  # Fallback
     volumes:
-      - mysql-replica-data:/var/lib/mysql
+      - mysql-replica-data:/data/mysql
       - ./conf/replica.cnf:/etc/my.cnf
       - ./mysql/init-scripts/replica-init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:

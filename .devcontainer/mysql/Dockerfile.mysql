@@ -1,0 +1,51 @@
+FROM rockylinux:9.3
+
+ARG MYSQL_VERSION=8.0.32
+ARG MYSQL_PACKAGE_RELEASE=1.el9
+
+ENV MYSQL_VERSION=${MYSQL_VERSION} \
+    MYSQL_PACKAGE_RELEASE=${MYSQL_PACKAGE_RELEASE} \
+    MYSQL_DATADIR=/data/mysql \
+    MYSQL_SOCKET=/data/mysql/mysql.sock \
+    MYSQLX_SOCKET=/data/mysql/mysqlx.sock \
+    MYSQL_LOG_ERROR=/var/log/mysqld.log \
+    MYSQL_LOG_BIN=/data/mysql/binlog
+
+RUN set -euxo pipefail \ 
+    && sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config || true \ 
+    && echo 'SELINUX=disabled' > /etc/selinux/config \ 
+    && dnf -y update \ 
+    && dnf -y install epel-release dnf-plugins-core \ 
+    && dnf -y install https://repo.mysql.com/mysql80-community-release-el9-1.noarch.rpm \ 
+    && dnf config-manager --disable mysql-tools-community mysql-tools-preview || true \ 
+    && dnf config-manager --enable mysql80-community \ 
+    && dnf -y module disable mysql \ 
+    && RPM_VERSION="${MYSQL_VERSION}-${MYSQL_PACKAGE_RELEASE}" \ 
+    && dnf -y install \
+       mysql-community-server-${RPM_VERSION} \
+       mysql-community-client-${RPM_VERSION} \
+       mysql-community-common-${RPM_VERSION} \
+       mysql-community-libs-${RPM_VERSION} \
+       mysql-community-client-plugins-${RPM_VERSION} \ 
+    && dnf -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm \
+    && percona-release setup -y pxb80 \
+    && dnf -y install percona-xtrabackup-80 supervisor which procps-ng hostname findutils gzip tar openssl less \ 
+    && dnf clean all \ 
+    && rm -rf /var/cache/dnf
+
+RUN set -euxo pipefail \ 
+    && mkdir -p /data/mysql /docker-entrypoint-initdb.d /var/log /var/run/mysqld \ 
+    && touch /var/log/mysqld.log \ 
+    && chown -R mysql:mysql /data/mysql /var/log/mysqld.log /var/run/mysqld \ 
+    && chmod 750 /data/mysql \ 
+    && chmod 775 /var/run/mysqld
+
+COPY mysql-entrypoint.sh /usr/local/bin/mysql-entrypoint.sh
+COPY supervisord.conf /etc/supervisord.conf
+
+RUN chmod +x /usr/local/bin/mysql-entrypoint.sh
+
+EXPOSE 3306 33060
+
+ENTRYPOINT ["/usr/local/bin/mysql-entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
