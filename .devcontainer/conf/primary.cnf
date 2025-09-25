@@ -5,15 +5,12 @@
 
 # GENERAL #
 server-id=1
+user=mysql
 # bind-address=0.0.0.0
 binlog-ignore-db=mysql
 binlog-ignore-db=information_schema
 binlog-ignore-db=performance_schema
-binlog_format=MIXED
-
-# For DEV only
-user=root # DEV only
-default_authentication_plugin=mysql_native_password
+binlog_format=ROW
 activate_all_roles_on_login=ON
 
 # Load semi-sync replication plugin
@@ -96,9 +93,9 @@ log-queries-not-using-indexes=1
 
 local-infile=0
 sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
-character_set_server=utf8
-collation_server=utf8_general_ci
-init_connect='SET NAMES utf8'
+character_set_server=utf8mb4
+collation_server=utf8mb4_unicode_ci
+init_connect='SET NAMES utf8mb4'
 skip-character-set-client-handshake
 
 [mysql]
