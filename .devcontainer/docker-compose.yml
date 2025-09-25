@@ -34,6 +34,7 @@ services:
       - mysql-primary-data:/data/mysql
       - ./conf/primary.cnf:/etc/my.cnf
       - ./mysql/init-scripts/primary-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./ssh:/opt/devcontainer/ssh:ro
     ports:
       - "3306:3306"
     networks:
@@ -59,6 +60,7 @@ services:
       - mysql-replica-data:/data/mysql
       - ./conf/replica.cnf:/etc/my.cnf
       - ./mysql/init-scripts/replica-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./ssh:/opt/devcontainer/ssh:ro
     ports:
       - "3307:3306"
     networks:

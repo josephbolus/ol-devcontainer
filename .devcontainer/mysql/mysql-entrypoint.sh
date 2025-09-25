@@ -8,6 +8,8 @@ MYSQLX_SOCKET=${MYSQLX_SOCKET:-/data/mysql/mysqlx.sock}
 MYSQL_LOG_ERROR=${MYSQL_LOG_ERROR:-/var/log/mysqld.log}
 INIT_DIR="/docker-entrypoint-initdb.d"
 DEFAULTS_FILE=${MYSQL_DEFAULTS_FILE:-/etc/my.cnf}
+SSH_SOURCE_DIR=${SSH_SOURCE_DIR:-/opt/devcontainer/ssh}
+SSH_USER=${SSH_USER:-dev}
 
 ensure_dirs() {
   mkdir -p "${MYSQL_DATADIR}" "$(dirname "${MYSQL_SOCKET}")" "$(dirname "${MYSQLX_SOCKET}")" /var/run/mysqld
@@ -15,6 +17,32 @@ ensure_dirs() {
   chmod 750 "${MYSQL_DATADIR}"
   touch "${MYSQL_LOG_ERROR}"
   chown mysql:mysql "${MYSQL_LOG_ERROR}"
+}
+
+setup_sshd() {
+  mkdir -p /var/run/sshd
+  chmod 755 /var/run/sshd
+  ssh-keygen -A >/dev/null 2>&1
+
+  local passwd_entry
+  passwd_entry=$(getent passwd "${SSH_USER}" || true)
+  if [ -z "${passwd_entry}" ]; then
+    echo "Warning: SSH user ${SSH_USER} not found; skipping authorized key setup." >&2
+    return
+  fi
+
+  local ssh_home
+  ssh_home=$(echo "${passwd_entry}" | cut -d: -f6)
+  local ssh_dir="${ssh_home}/.ssh"
+  mkdir -p "${ssh_dir}"
+  chmod 700 "${ssh_dir}"
+  chown "${SSH_USER}:${SSH_USER}" "${ssh_dir}"
+
+  if [ -d "${SSH_SOURCE_DIR}" ] && [ -f "${SSH_SOURCE_DIR}/authorized_keys" ]; then
+    cp "${SSH_SOURCE_DIR}/authorized_keys" "${ssh_dir}/authorized_keys"
+    chown "${SSH_USER}:${SSH_USER}" "${ssh_dir}/authorized_keys"
+    chmod 600 "${ssh_dir}/authorized_keys"
+  fi
 }
 
 run_mysqld_temp() {
@@ -70,6 +98,7 @@ process_init_files() {
 
 main() {
   ensure_dirs
+  setup_sshd
 
   if [ ! -d "${MYSQL_DATADIR}/mysql" ]; then
     echo "Initializing MySQL datadir at ${MYSQL_DATADIR}"

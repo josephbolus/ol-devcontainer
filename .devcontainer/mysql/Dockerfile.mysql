@@ -27,21 +27,26 @@ RUN set -euxo pipefail \
        mysql-community-common-${RPM_VERSION} \
        mysql-community-libs-${RPM_VERSION} \
        mysql-community-client-plugins-${RPM_VERSION} \ 
-    && dnf -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm \
-    && percona-release setup -y pxb80 \
-    && dnf -y install percona-xtrabackup-80 supervisor which procps-ng hostname findutils gzip tar openssl less \ 
+    && dnf -y install https://repo.percona.com/yum/percona-release-latest.noarch.rpm \ 
+    && percona-release setup -y pxb80 \ 
+    && dnf -y install percona-xtrabackup-80 supervisor which procps-ng hostname findutils gzip tar openssl less openssh-server openssh-clients \ 
     && dnf clean all \ 
     && rm -rf /var/cache/dnf
 
 RUN set -euxo pipefail \ 
-    && mkdir -p /data/mysql /docker-entrypoint-initdb.d /var/log /var/run/mysqld \ 
+    && useradd --create-home --shell /bin/bash dev \ 
+    && mkdir -p /data/mysql /docker-entrypoint-initdb.d /var/log /var/run/mysqld /var/run/sshd /opt/devcontainer/ssh \ 
     && touch /var/log/mysqld.log \ 
     && chown -R mysql:mysql /data/mysql /var/log/mysqld.log /var/run/mysqld \ 
+    && chown -R dev:dev /home/dev \ 
     && chmod 750 /data/mysql \ 
-    && chmod 775 /var/run/mysqld
+    && chmod 775 /var/run/mysqld \ 
+    && chmod 700 /home/dev \ 
+    && chmod 700 /var/run/sshd
 
 COPY mysql-entrypoint.sh /usr/local/bin/mysql-entrypoint.sh
 COPY supervisord.conf /etc/supervisord.conf
+COPY sshd_config /etc/ssh/sshd_config
 
 RUN chmod +x /usr/local/bin/mysql-entrypoint.sh
 

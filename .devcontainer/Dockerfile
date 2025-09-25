@@ -18,6 +18,7 @@ RUN apt-get update && \
     wget \
     curl \
     jq \
+    openssh-client \
     mysql-client \
     percona-toolkit \
     git \

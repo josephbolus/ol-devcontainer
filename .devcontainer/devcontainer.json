@@ -35,7 +35,7 @@
     }
   },
   "forwardPorts": [3306, 3307],
-  "postCreateCommand": "bash /workspace/.devcontainer/mysql/setup-db.sh",
+  "postCreateCommand": "bash /workspace/.devcontainer/scripts/post-create.sh",
   "postStartCommand": "bash /workspace/.devcontainer/mysql/verify-replication.sh",
   "remoteUser": "vscode"
 }
