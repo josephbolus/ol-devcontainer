@@ -14,6 +14,10 @@ SSH_USER=${SSH_USER:-dev}
 
 ensure_dirs() {
   mkdir -p "${MYSQL_DATADIR}" "$(dirname "${MYSQL_SOCKET}")" "$(dirname "${MYSQLX_SOCKET}")" /var/run/mysqld
+  if [ ! -L /var/lib/mysql ]; then
+    rm -rf /var/lib/mysql
+    ln -s "${MYSQL_DATADIR}" /var/lib/mysql
+  fi
   chown -R mysql:mysql "${MYSQL_DATADIR}" /var/run/mysqld
   chmod 750 "${MYSQL_DATADIR}"
   touch "${MYSQL_LOG_ERROR}"

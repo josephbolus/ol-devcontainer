@@ -42,7 +42,9 @@ RUN set -euxo pipefail \
     && chmod 750 /data/mysql \ 
     && chmod 775 /var/run/mysqld \ 
     && chmod 700 /home/dev \ 
-    && chmod 700 /var/run/sshd
+    && chmod 700 /var/run/sshd \ 
+    && rm -rf /var/lib/mysql \ 
+    && ln -s /data/mysql /var/lib/mysql
 
 COPY mysql-entrypoint.sh /usr/local/bin/mysql-entrypoint.sh
 COPY supervisord.conf /etc/supervisord.conf
