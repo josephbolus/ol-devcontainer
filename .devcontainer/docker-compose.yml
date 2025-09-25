@@ -7,7 +7,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ..:/workspace:cached
-    container_name: devcontainer-app
+    container_name: devcontainer
+    hostname: devcontainer
     command: sleep infinity
     networks:
       - mysql-network
@@ -23,6 +24,7 @@ services:
         MYSQL_VERSION: ${MYSQL_VERSION}
         MYSQL_PACKAGE_RELEASE: ${MYSQL_PACKAGE_RELEASE}
     container_name: mysql-primary
+    hostname: mysql-primary
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -49,6 +51,7 @@ services:
         MYSQL_VERSION: ${MYSQL_VERSION}
         MYSQL_PACKAGE_RELEASE: ${MYSQL_PACKAGE_RELEASE}
     container_name: mysql-replica
+    hostname: mysql-replica
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
