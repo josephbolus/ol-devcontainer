@@ -2,3 +2,6 @@
 .devcontainer/ssh/id_ed25519
 .devcontainer/ssh/id_ed25519.pub
 .devcontainer/ssh/authorized_keys
+
+# Untracked docs tarballs/reference dumps
+docs/
