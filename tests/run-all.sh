@@ -21,7 +21,7 @@ fi
 
 for case_script in $(printf '%s\n' "${cases[@]}" | sort); do
   echo "--> Running $(basename "${case_script}")"
-  sudo bash "${case_script}"
+  bash "${case_script}"
   echo "<-- Completed $(basename "${case_script}")"
 done
 

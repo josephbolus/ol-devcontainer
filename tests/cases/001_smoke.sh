@@ -74,9 +74,6 @@ wait_for_mysql "${REPLICA_NAME}"
 # Seed the databases and refresh SSH assets.
 docker exec "${DEV_CONTAINER_NAME}" bash /workspace/.devcontainer/scripts/post-create.sh
 
-# Ensure SSH client config is fresh inside the devcontainer.
-docker exec "${DEV_CONTAINER_NAME}" bash -lc 'rm -f ~/.ssh/known_hosts && /workspace/.devcontainer/scripts/setup-ssh-client.sh'
-
 # Verify SSH and supervisorctl access.
 docker exec "${DEV_CONTAINER_NAME}" ssh -o BatchMode=yes mysql-primary 'sudo supervisorctl status'
 
