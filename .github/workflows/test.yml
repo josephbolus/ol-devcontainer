@@ -1,0 +1,14 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate SSH keys
+        run: |
+          mkdir -p .devcontainer/ssh
+          ssh-keygen -t rsa -b 4096 -f .devcontainer/ssh/id_rsa -N ""
+      - name: Run tests
+        run: sudo ./tests/run-all.sh
