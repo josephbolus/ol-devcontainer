@@ -1,4 +1,4 @@
-Host mysql-primary
+Host mysql-primary dbprimary
   HostName mysql-primary
   User dev
   IdentityFile ~/.ssh/devcontainer-mysql-ed25519
@@ -7,7 +7,7 @@ Host mysql-primary
   UserKnownHostsFile /dev/null
   LogLevel ERROR
 
-Host mysql-replica
+Host mysql-replica dbreplica
   HostName mysql-replica
   User dev
   IdentityFile ~/.ssh/devcontainer-mysql-ed25519
