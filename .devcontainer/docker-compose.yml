@@ -41,7 +41,9 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - mysql-network
+      mysql-network:
+        aliases:
+          - dbprimary
 
   mysql-replica:
     build:
@@ -68,7 +70,9 @@ services:
     ports:
       - "3307:3306"
     networks:
-      - mysql-network
+      mysql-network:
+        aliases:
+          - dbreplica
     depends_on:
       - mysql-primary
 
