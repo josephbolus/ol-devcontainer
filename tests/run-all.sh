@@ -11,7 +11,12 @@ if [ ! -d "${CASES_DIR}" ]; then
 fi
 
 shopt -s nullglob
-cases=("${CASES_DIR}"/*.sh)
+cases=()
+for f in "${CASES_DIR}"/*.sh; do
+  if [[ "$(basename "$f")" != "common.sh" ]]; then
+    cases+=("$f")
+  fi
+done
 shopt -u nullglob
 
 if [ ${#cases[@]} -eq 0 ]; then

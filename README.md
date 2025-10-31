@@ -18,8 +18,8 @@ After the devcontainer starts (or after running
 `.devcontainer/scripts/setup-ssh-client.sh`) you can:
 
 ```bash
-ssh mysql-primary
-ssh mysql-replica
+ssh mysql-primary (or ssh dbprimary)
+ssh mysql-replica (or ssh dbreplica)
 
 scp ./some-file.sql mysql-primary:/tmp/
 scp mysql-replica:/var/log/mysqld.log ./logs/

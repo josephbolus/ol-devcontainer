@@ -17,7 +17,7 @@
 - `./tests/run-all.sh` executes the full smoke suite (build, seed, SSH checks, replication, cleanup) and should stay green as features evolve.
 
 ## Container Access & Operations
-- SSH into the DB containers from the workspace with `ssh mysql-primary` / `ssh mysql-replica`; the `dev` user has passwordless sudo and `mysql` group membership.
+- SSH into the DB containers from the workspace with `ssh mysql-primary` / `ssh mysql-replica` (or `ssh dbprimary` / `ssh dbreplica`); the `dev` user has passwordless sudo and `mysql` group membership.
 - Manage services with `docker exec -it mysql-primary supervisorctl status` when running from the host, or `sudo supervisorctl <cmd>` when connected over SSH as `dev`.
 - `cleanup.sh` removes containers, volumes, and dev networks; run it outside the devcontainer when you need a clean slate.
 
