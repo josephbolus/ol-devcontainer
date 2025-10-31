@@ -12,6 +12,8 @@ DEV_CONTAINER_NAME="devcontainer"
 PRIMARY_NAME="mysql-primary"
 REPLICA_NAME="mysql-replica"
 
+cleanup_done=0
+
 cleanup() {
   if [ "${cleanup_done}" -eq 1 ]; then
     return
@@ -63,8 +65,6 @@ wait_for_ssh() {
 }
 
 trap cleanup EXIT
-
-cleanup_done=0
 
 cd "${ROOT_DIR}"
 cleanup
